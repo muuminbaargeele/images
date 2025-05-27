@@ -1,0 +1,284 @@
+e-Tartan: App Concept, Overview, and Introduction
+⸻
+App Concept
+e-Tartan is a next-generation platform designed to bring competitive football gaming—especially
+eFootball and similar sports games—to the Somali region and beyond, in a highly organized,
+accessible, and fair way. The platform enables everyone to participate in or follow digital football
+tournaments and leagues, blending real competition, community, and digital convenience.
+Core Idea:
+• Democratize participation in digital football competitions.
+• Provide seamless, transparent tournament management.
+• Automate match scheduling, results verification (including AI-assisted), and
+ranking.
+• Foster an active community where users can connect, compete, and celebrate
+together.
+⸻
+Overview
+e-Tartan serves several user groups, each with specific features:
+1. Everyone (Guests & Registered Users)
+• Browse tournaments and leagues, see schedules/fixtures.
+• View standings, rankings, and leaderboards.
+• Get notifications (e.g., new tournaments).
+• Explore player profiles and public stats.
+2. Players
+• All features above, plus:
+• Register/join tournaments and leagues.
+• Pay for subscriptions (weekly/monthly) or use promo codes for discounts/free
+entries.
+• Submit match results (with screenshot upload for AI verification).
+• Chat with opponents during matches.
+• Track personal stats and receive match reminders.
+3. Admins
+• All of the above, plus:
+• Create/manage tournaments and leagues.
+• Oversee results, resolve disputes, and override when needed.
+• Ban users and manage blacklists.
+• Handle tournament automation (e.g., auto-create knockout cups weekly).
+4. System/Automation
+• Auto-generates knockout tournaments weekly.
+• Auto-matches players, sends notifications, and manages time-based logic (e.g.,
+cut-off times, reminders, result auto-assignment).
+⸻
+Introduction
+What is e-Tartan?
+e-Tartan is a centralized, cloud-based platform that makes competitive football gaming
+accessible, automated, and community-driven. It brings order to the chaos of casual and semi-
+pro eFootball matches by providing structure, fair play, and automated tools for both players and
+organizers.
+Key Features:
+• Automated Tournament Management: Knockout cups, leagues, scheduling, and
+result tracking.
+• Subscription System: Weekly or monthly paid access, with promo code support.
+• Smart Match Verification: AI-powered screenshot analysis for result validation.
+• Player Communication: Built-in chat, notifications, WhatsApp reminders.
+• Accessibility: Open to everyone—only players need to register to participate;
+spectators can browse and watch.
+Why e-Tartan?
+• Many Somali gamers lack organized eFootball tournaments and reliable systems
+for fair play and tracking.
+• Manual tournament management is slow, error-prone, and unscalable.
+• e-Tartan solves these by providing end-to-end digital tournament management,
+leveraging automation and smart technologies.
+⸻
+Vision
+To become the leading digital hub for football gaming tournaments in Somalia and East Africa—
+empowering communities, promoting healthy competition, and making e-sports more accessible,
+fun, and transparent.
+⸻
+How it Works: High-Level Flow
+1. Player/Guest opens the app: Sees active tournaments and can browse
+leaderboards.
+2. Player wants to join a tournament: Registers, pays via mobile money, joins open
+tournaments (with weekly/monthly options).
+3. Automatic matching: System schedules matches, notifies players, and opens chat
+between opponents.
+4. Match played: Players submit results and screenshots; system/AI verifies
+outcomes.
+5. Leaderboard updated: Standings auto-refresh; rewards and next rounds set up
+automatically.
+6. Admins monitor: Can intervene for disputes, create new tournaments, or ban users
+if necessary.
+⸻
+Conclusion
+e-Tartan is more than just a tournament manager—it’s a community-driven digital football league
+built for the region, by the region. It’s a fair, fun, scalable solution that grows with its players and
+brings Somali e-sports to the next level.
+Technologies Used
+1. Backend
+• Node.js: Runtime environment for JavaScript/TypeScript server code.
+• Express.js: Web framework for creating RESTful APIs.
+• TypeScript: Strongly typed JavaScript for more robust and maintainable code.
+• TypeORM: Object Relational Mapper (ORM) for working with the database using
+models/entities.
+2. Database
+• MySQL: Relational Database Management System for structured data storage.
+3. Authentication & Security
+• JWT (JSON Web Token): Stateless authentication and authorization.
+• Bcrypt: Secure password hashing.
+4. Email & SMS
+• Nodemailer: Sending emails (OTP, notifications).
+• (Planned/Optional) Twilio / Hormuud API: For sending SMS (OTP, notifications).
+5. Validation & Utilities
+• class-validator: For validating DTOs and user input.
+• dotenv: Managing environment variables.
+• Custom Middlewares: For authentication, admin access, DTO validation, etc.
+6. Server Management & Deployment
+• PM2: Production process manager for Node.js apps.
+• Nginx: Web server and reverse proxy.
+• Ubuntu Server (VPS): Linux server hosting the backend and database.
+• Git: Version control.
+• GitHub: Source code repository hosting and collaboration.
+• VS Code Remote SSH: For code editing directly on the server.
+7. Testing & Debugging
+• Postman: API testing and documentation.
+• VS Code Debugger: Debugging backend code.
+8. Others
+• OpenAI API (Planned): For match result verification (AI image-to-JSON extraction).
+• SPF/DKIM/DMARC (Planned): For email deliverability and trust when using a
+custom domain.
+1. User Management
+• User Table: Stores all users (admin, player, etc.).
+Fields: id, username, phoneNumber, email, firstName, middleName, lastName, roleId (FK),
+isDeleted, isActive, etc.
+• Role Table: Defines roles (admin, player, …).
+• Player Table: Extends user with player-specific fields (eFootball ID, username, etc.).
+Every player is a user, but not every user is a player.
+2. Authentication/Authorization
+• JWT Tokens (with token version): Used for API auth, supports single-device login
+per user.
+• OTP Table: Handles both SMS and Email OTPs for verification, password reset,
+etc.
+• SysConfig Table: Stores configuration flags (e.g., isSmsOtpActive,
+isEmailOtpActive).
+3. Mobile Operator Validation
+• MobileOperator Table: Stores operator names, prefixes, and active status for phone
+validation.
+• Custom validator ensures only active operator prefixes are accepted.
+4. Tournament Management
+• Tournament Table:
+• id, name (unique, with auto-increment if name exists),
+• type (KNOCKOUT/LEAGUE),
+• status (UPCOMING, ACTIVE, etc.),
+• startDate, endDate (auto-calculated if not given),
+• maxPlayers, isAuto (auto-creation of tournaments),
+• createdBy (FK to User/Admin).
+• Admins can create tournaments; tournaments get unique names if duplicates.
+5. User Profile
+• User can update name, password, etc.
+• Players have additional profile fields.
+6. Password & OTP Flows
+• Unified OTP system (email/sms based on config & user verification).
+• Password reset and forgot password logic:
+• Sends OTP via preferred/verified channel
+• User can’t use old password
+• Update password after OTP validation
+7. Account Deletion/Logout
+• Deletion is soft (user is marked as deleted, but not recognized by the system).
+• Logout simply invalidates token (via token version bump).
+⸻
+Entity Relationships
+• User ← Role
+• Player ← User
+• Tournament ← User (createdBy)
+• OTP ← User
+• MobileOperator (standalone, used for validation)
+⸻
+What’s Implemented So Far?
+• User, role, player, mobile operator, sysconfig, otp, and tournament tables/entities
+• Authentication and admin middleware
+• Tournament creation with name uniqueness, automatic end date
+• List and get tournament endpoints
+• User registration, login, OTP, password reset/forgot password
+• Profile logic, account deletion, and logout.
+e-Tartan App Core Idea & Flow
+1. For Everyone (Non-Registered Users)
+• View tournaments/leagues: See upcoming, ongoing, or past tournaments and
+leagues.
+• View match schedules/fixtures: See who is playing when.
+• View standings/rankings/leaderboards: Check who’s leading or recent winners.
+• Get notifications: Learn about new tournaments or results (public notifications, app
+homepage).
+• View player profiles and stats: See top players, their history, and stats.
+⸻
+2. For Players (Registered Users)
+Players get all features above, plus:
+Joining a Tournament
+1. Browse tournaments and click “Join”.
+2. Register/login if not already.
+3. Pay subscription (weekly/monthly, or enter promo code).
+4. Join the tournament (auto-assigned or choose).
+5. Get matched/scheduled automatically (pairings shown).
+On Match Day
+• Get notified when it’s your match.
+• Enter the match/chat screen; your opponent is notified.
+• Press “Ready” to signal you’re present. If both do not press ready, both are marked
+absent.
+• If you enter and your opponent doesn’t, you can win by forfeit if they remain
+absent.
+• Chat/message opponent (when match time starts).
+• Play the match on eFootball, then submit the result (upload screenshot).
+After the Match
+• AI verifies screenshot (using OpenAI).
+• Results/standings update automatically.
+• Admins can override results if needed (disputes, errors).
+⸻
+3. Subscriptions
+• Weekly: Join 1 tournament per week.
+• Monthly: Join 4 tournaments per month.
+• Promo codes: Can be applied for free/discounted entry.
+⸻
+4. Admin Features
+• Create/manage tournaments (manually or auto-generated weekly).
+• Manage users (ban, unban, verify).
+• Override results if needed.
+• See and manage subscriptions, payments, and promo codes.
+⸻
+5. Tournament Logic
+• Knockout: 32 players, single-elimination, auto-starts weekly.
+• League (future): Round robin, points-based, longer duration.
+⸻
+6. Verification
+• OTP via SMS/Email for secure logins and actions.
+• AI for result verification (screenshot analysis).
+⸻
+Database Structure (Current)
+• User, Player, Role (users, with profile and role info)
+• MobileOperator (for phone validation)
+• Otp, SysConfig (for authentication & system settings)
+• Tournament (core tournament table, with creator/admin)
+• … more to come (Matches, Results, PromoCodes, Subscriptions)
+⸻
+Typical Flow: From New Player to Winner
+1. Browse tournaments → Register/Pay → Join tournament → Get scheduled → Play
+match → Submit result → Standings update → Play next match/round
+On Match Day:
+1. Match Day Overview
+On Match Day, the main goals are:
+• Notify players about their upcoming matches.
+• Ensure both players are “ready” before the match (with a “Ready” button in the
+app).
+• Enable players to communicate (in-app chat/WhatsApp integration).
+• Record match results (with screenshots and AI validation).
+• Handle no-shows and forfeits according to your rules.
+⸻
+2. Key Features & User Experience
+A. Notifications
+• Players are notified (app push, email, SMS) a few hours before their match, and
+repeatedly if they haven’t acknowledged.
+• If a player enters the match/chat screen, the other player is alerted that their
+opponent is waiting.
+B. Ready Button
+• Each player must press a Ready button in the app to confirm presence.
+• If neither presses “Ready” by match deadline (e.g., 23:59), match is declared a
+draw (missed match).
+• If one player presses “Ready” and the other does not, the present player wins by
+forfeit.
+C. Communication
+• Once both are present, an in-app chat is enabled. Optionally, WhatsApp integration
+can notify the absent player that their opponent is waiting.
+D. Result Submission
+• After the match, both players can submit the result and upload a screenshot.
+• The screenshot is processed by your AI for automated validation.
+E. Reminders and Escalation
+• If neither player joins the match screen, multiple reminders are sent.
+• If deadline passes, result is automatically processed according to your rules.
+4. Match Day Logic (Backend Service)
+A. When Match Day Starts
+• Scheduled jobs check which matches are due today.
+• Send reminders to both players (app, email, SMS).
+B. On Ready Button
+• Player presses Ready; backend marks isPlayer1Ready or isPlayer2Ready = true.
+• If both ready, enable chat; else, send alert to opponent that “X is waiting”.
+C. No-Show Handling
+• Cron job checks at 23:59:
+• If neither ready: set match as missed, result is draw, notify both.
+• If one is ready: mark match as forfeit, present player wins, notify both.
+D. Chat/WhatsApp
+• When one player presses ready, other receives in-app and WhatsApp notification (if
+integrated).
+E. Match Result Submission
+• After match, allow both to submit scores + screenshot.
+• Process screenshot with AI, save validated result, update leaderboard.
+6. Admin/Automation
+• Cron job at 23:59 processes any incomplete matches.
+• Admin dashboard to review and override results if necessary.
